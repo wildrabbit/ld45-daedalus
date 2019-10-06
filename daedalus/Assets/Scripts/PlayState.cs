@@ -36,6 +36,8 @@ public class PlayState : MonoBehaviour
     public int CurrentLevelIdx;
     public string CurrentScene => _levels == null ? SceneManager.GetActiveScene().name :_levels.Scenes[CurrentLevelIdx];
 
+    public bool IsLastLevel => _levels == null ? true : (CurrentLevelIdx == _levels.Scenes.Length - 1);
+
     public void PlayFirst()
     {
         CurrentLevelIdx = _startLevel;

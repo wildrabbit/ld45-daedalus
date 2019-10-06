@@ -51,6 +51,8 @@ public class GameController : MonoBehaviour
     [SerializeField] Canvas _levelEndCanvas;
     [SerializeField] float _levelEndDelay = 1f;
 
+    [SerializeField] float _moveSpeed = 3f;
+
     readonly Vector3Int[] _offsets = new Vector3Int[] {
         new Vector3Int(0,1,0),
         new Vector3Int(0,-1,0),
@@ -131,8 +133,10 @@ public class GameController : MonoBehaviour
     IEnumerator ShowInfo()
     {
         _infoCanvas.gameObject.SetActive(true);
+        _infoCanvas.GetComponent<ShowConfirm>().SetConfirm(false);
         yield return new WaitForSeconds(_infoDelay);
         _infoReady = true;
+        _infoCanvas.GetComponent<ShowConfirm>().SetConfirm(true);
     }
 
     private void PurgeOverlappingScrolls()
@@ -334,10 +338,15 @@ public class GameController : MonoBehaviour
         if (_levelEndCanvas != null)
         {
             _levelEndCanvas.gameObject.SetActive(true);
+            EndScreen endScreen = _levelEndCanvas.GetComponent<EndScreen>();
+            endScreen.SetConfirm(false);
+            endScreen.Setup(_gameResult);
         }
         // TODO: Show victory / defeat / last level logic
         yield return new WaitForSeconds(_levelEndDelay);
-
+        if(_levelEndCanvas != null)
+         _levelEndCanvas.GetComponent<ShowConfirm>().SetConfirm(true);
+    
         _endReady = true;
        
     }
@@ -384,7 +393,7 @@ public class GameController : MonoBehaviour
         Vector3 direction = (pos - _player.transform.position).normalized;
         while(Vector3.Distance(playerPos, pos) > 0.01f)
         {
-            playerPos += 3 * Time.deltaTime * direction; // TODO: Change to easing
+            playerPos += _moveSpeed * Time.deltaTime * direction; // TODO: Change to easing
             _player.transform.position = playerPos;
             yield return null;
             direction = (pos - playerPos).normalized;
