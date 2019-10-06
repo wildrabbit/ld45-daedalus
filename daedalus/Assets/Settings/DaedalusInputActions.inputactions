@@ -161,6 +161,17 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "",
+                    "id": "cb07dbb1-ab4e-4907-9727-dfabacf4e56d",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "Shoulder buttons",
                     "id": "4ca68f1e-7316-4d9a-939e-5c5a03524b7c",
                     "path": "1DAxis",

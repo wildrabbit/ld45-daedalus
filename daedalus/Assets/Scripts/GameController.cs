@@ -5,11 +5,12 @@ using UnityEngine;
 
 public enum GameState
 {
+    WaitInfo,
     WaitPlayerInput,
     WaitPlayerAction,
     Placement,
     Simulating,
-    // Tutorial??
+    Ended
 }
 
 public enum GameResult
@@ -44,6 +45,12 @@ public class GameController : MonoBehaviour
     [SerializeField] GameInput _gameInput;
     [SerializeField] GoalType _levelObjective;
 
+    [SerializeField] Canvas _infoCanvas;
+    [SerializeField] float _infoDelay = 3f;
+
+    [SerializeField] Canvas _levelEndCanvas;
+    [SerializeField] float _levelEndDelay = 1f;
+
     readonly Vector3Int[] _offsets = new Vector3Int[] {
         new Vector3Int(0,1,0),
         new Vector3Int(0,-1,0),
@@ -67,8 +74,16 @@ public class GameController : MonoBehaviour
     int _totalTreasures;
     int _acquiredTreasures;
 
+    bool _infoReady = false;
+    bool _endReady = false;
+
     void Start()
     {
+        if(_infoCanvas != null)
+        _infoCanvas.gameObject.SetActive(false);
+        if (_levelEndCanvas != null)
+        _levelEndCanvas.gameObject.SetActive(false);
+
         StartGame();    
     }
 
@@ -76,7 +91,7 @@ public class GameController : MonoBehaviour
     {
         _turnCount = 0;
         _playerActionFinished = false;
-        _gameState = GameState.WaitPlayerInput;
+        _gameState = _infoCanvas != null ? GameState.WaitInfo : GameState.WaitPlayerInput;
 
         _pickables = new List<Pickable>();
         _totalTreasures = 0;
@@ -105,6 +120,19 @@ public class GameController : MonoBehaviour
 
         PurgeOverlappingScrolls();
         Debug.Log($"Level {PlayState.Instance.CurrentScene} starts now");
+
+        if(_gameState == GameState.WaitInfo)
+        {
+            _infoReady = false;
+            StartCoroutine(ShowInfo());
+        }
+    }
+    
+    IEnumerator ShowInfo()
+    {
+        _infoCanvas.gameObject.SetActive(true);
+        yield return new WaitForSeconds(_infoDelay);
+        _infoReady = true;
     }
 
     private void PurgeOverlappingScrolls()
@@ -151,22 +179,33 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_gameResult != GameResult.Running)
-        {
-            // Do stuff (handle restarts)
-            if(_gameResult == GameResult.Won && _gameInput.Confirmed)
-            {
-                PlayState.Instance.NextScene();
-            }
-            else if(_gameResult == GameResult.Lost && _gameInput.Confirmed)
-            {
-                PlayState.Instance.LoadCurrentLevel();
-            }
-            return;
-        }
-
         switch (_gameState)
         {
+            case GameState.WaitInfo:
+            {
+                if(_infoReady && _gameInput.Confirmed)
+                {
+                    _infoCanvas.gameObject.SetActive(false);
+                    _gameState = GameState.WaitPlayerInput;
+                }
+                break;
+            }
+            case GameState.Ended:
+            {
+                if (_endReady && _gameInput.Confirmed)
+                {
+                    if (_gameResult == GameResult.Won)
+                    {
+                        PlayState.Instance.NextScene();
+                    }
+                    else if (_gameResult == GameResult.Lost)
+                    {
+                        PlayState.Instance.LoadCurrentLevel();
+                    }
+                    
+                }
+                break;
+            }
             case GameState.WaitPlayerInput:
             {
                 if(_gameInput.Direction != MoveDirection.None)
@@ -280,10 +319,27 @@ public class GameController : MonoBehaviour
         }
         _gameInput.Reset();
 
-        if(_gameResult != GameResult.Running)
+        if(_gameState != GameState.Ended && _gameResult != GameResult.Running)
         {
+            _gameState = GameState.Ended;
+            _endReady = false;
+
+            StartCoroutine(OnLevelEnd());
             Debug.LogFormat("{0}", _gameResult == GameResult.Won ? "won!" : "lost");
         }
+    }
+
+    IEnumerator OnLevelEnd()
+    {
+        if (_levelEndCanvas != null)
+        {
+            _levelEndCanvas.gameObject.SetActive(true);
+        }
+        // TODO: Show victory / defeat / last level logic
+        yield return new WaitForSeconds(_levelEndDelay);
+
+        _endReady = true;
+       
     }
 
     private GameResult EvaluateVictory()
@@ -417,7 +473,7 @@ public class GameController : MonoBehaviour
             return false;
         }
 
-        return (evaluateExit && !goalReachable) ||  (evaluateTreasure && !treasuresReachable);
+        return (evaluateExit && !goalReachable) ||  (evaluateTreasure && _acquiredTreasures < _totalTreasures && !treasuresReachable);
     }
 
     bool ExistsPlayerWalkablePahToEntity<T>(Vector3Int playerCoords, List<T> entities) where T:Entity
