@@ -74,7 +74,50 @@ public class GameController : MonoBehaviour
         _player.transform.position = _map.WorldFromCoords(_playerStartCoords, centered:true);
 
         _gameResult = NoPossiblePaths() ? GameResult.Lost : GameResult.Running;
+        RefreshVisibility();
 
+        PurgeOverlappingScrolls();
+    }
+
+    private void PurgeOverlappingScrolls()
+    {
+        HashSet<Vector3Int> foundCoords = new HashSet<Vector3Int>();
+        List<Scroll> toRemove = new List<Scroll>();
+        foreach(var scroll in _scrolls)
+        {
+            var coords = _map.CoordsFromWorld(scroll.transform.position);
+            if (foundCoords.Contains(coords))
+            {
+                Debug.Log($"Found overlapping scroll {scroll.name} at {foundCoords}");
+                toRemove.Add(scroll);
+            }
+            else
+            {
+                foundCoords.Add(coords);
+            }
+        }
+        foreach(var remove in toRemove)
+        {
+            _scrolls.Remove(remove);
+            Destroy(remove.gameObject);
+        }
+    }
+
+    void RefreshVisibility()
+    {
+        Vector3Int playerCoords = _map.CoordsFromWorld(_player.transform.position);
+        _map.RefreshHiddenTiles(playerCoords);
+
+        foreach (var scroll in _scrolls)
+        {
+            scroll.SetVisible(IsVisibleEntity(scroll));
+        }        
+    }
+
+    bool IsVisibleEntity(Entity entity)
+    {
+        Vector3Int coords = _map.CoordsFromWorld(entity.transform.position);
+        return (_map.GetTileDataAt(coords)?.TileType ?? TileType.None) == TileType.Ground;
     }
 
     // Update is called once per frame
@@ -160,6 +203,7 @@ public class GameController : MonoBehaviour
                         {
                             Destroy(_tempBlockInstance.gameObject);
                             _tempBlockInstance = null;
+                            RefreshVisibility();
                             _player.SetTint(Color.white);
                             if(NoPossiblePaths())
                             {
@@ -207,6 +251,20 @@ public class GameController : MonoBehaviour
         {
             Debug.LogFormat("{0}", _gameResult == GameResult.Won ? "won!" : "lost");
         }
+    }
+
+    private List<Scroll> GetScrollsAt(Vector3Int targetCoords)
+    {
+        List<Scroll> scrolls = new List<Scroll>();
+        foreach (var scroll in _scrolls)
+        {
+            if (_map.CoordsFromWorld(scroll.transform.position).Equals(targetCoords))
+            {
+                scrolls.Add(scroll);
+            }
+        }
+
+        return scrolls;
     }
 
     private Scroll GetScrollAt(Vector3Int targetCoords)
@@ -266,7 +324,7 @@ public class GameController : MonoBehaviour
     bool NoPossiblePaths()
     {
         var playerCoords = _map.CoordsFromWorld(_player.transform.position);
-        bool pathToGoal = _map.ExistsPath(playerCoords, _map.CoordsFromWorld(_levelExit.position));
+        bool pathToGoal = _map.ExistsPlayerWalkablePath(playerCoords, _map.CoordsFromWorld(_levelExit.position));
         if(pathToGoal)
         {
             return false;
@@ -274,7 +332,7 @@ public class GameController : MonoBehaviour
 
         foreach(var scroll in _scrolls)
         {
-            if(_map.ExistsPath(playerCoords, _map.CoordsFromWorld(scroll.transform.position)))
+            if(_map.ExistsPlayerWalkablePath(playerCoords, _map.CoordsFromWorld(scroll.transform.position)))
             {
                 return false;
             }

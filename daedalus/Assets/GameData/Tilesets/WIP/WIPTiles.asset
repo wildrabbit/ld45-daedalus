@@ -15,3 +15,4 @@ MonoBehaviour:
   tiles:
   - {fileID: 11400000, guid: 7ce4fb425cf2d5948906a2ea9d283435, type: 2}
   - {fileID: 11400000, guid: b50a0e520cbdfd64a875d728f5fb4e9e, type: 2}
+  - {fileID: 11400000, guid: 5b7f298140230b64bbfdb11cc6068eca, type: 2}

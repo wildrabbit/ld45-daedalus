@@ -20,7 +20,7 @@ public static class PathUtils
         public override string ToString() => $"{Coords} <- {(From.HasValue ? From.Value.ToString() : "NONE")} [{Distance}]";
     }
 
-    public static void FindPath(Map map, Vector3Int from, Vector3Int to, ref List<Vector3Int> path)
+    public static void FindPath(Map map, Vector3Int from, Vector3Int to, Predicate<Vector3Int> walkabilityTest, ref List<Vector3Int> path)
     {
         path.Clear();
         if (from == to)
@@ -35,7 +35,7 @@ public static class PathUtils
         List<Vector3Int> validTiles = new List<Vector3Int>();
         foreach (var position in mapBounds.allPositionsWithin)
         {
-            if (map.HasTileAt(position) && map.GetTileDataAt(position).Walkable)
+            if (map.HasTileAt(position) && walkabilityTest(position))
             {
                 validTiles.Add(position);
                 visitedInfo[position] = new PathInfo(position);

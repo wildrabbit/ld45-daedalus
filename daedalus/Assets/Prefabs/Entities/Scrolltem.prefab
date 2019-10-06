@@ -68,9 +68,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1732320187
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -7939694244080667551, guid: ad640c5341a516b4883ee20caea2a6ae,
+  m_Sprite: {fileID: -3494800509367668820, guid: ad640c5341a516b4883ee20caea2a6ae,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -95,7 +95,7 @@ GameObject:
   m_Layer: 0
   m_Name: Scrolltem
   m_TagString: Untagged
-  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -126,5 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 440e78d49a84e5740b4e4804187aaa52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _viewRoot: {fileID: 1343278685179959438}
-  _blockData: {fileID: 0}
+  _hiddenSprite: {fileID: -2682186634733647102, guid: ad640c5341a516b4883ee20caea2a6ae,
+    type: 3}
+  ViewRoot: {fileID: 1343278685179959438}
+  BlockData: {fileID: 0}

@@ -100,6 +100,42 @@ public class Map : MonoBehaviour
         return true;
     }
 
+    internal void RefreshHiddenTiles(Vector3Int playerCoords)
+    {
+        List<Vector3Int> setHidden = new List<Vector3Int>();
+        List<Vector3Int> setVisible = new List<Vector3Int>();
+        foreach(var tilePos in _tilemap.cellBounds.allPositionsWithin)
+        {
+            TileData data = GetTileDataAt(tilePos);
+            var type = data?.TileType ?? TileType.None;
+
+            if (type == TileType.None || type == TileType.Wall)
+            {
+                continue;
+            }
+
+            if(type == TileType.Hidden && ExistsPlayerWalkablePath(playerCoords, tilePos))
+            {
+                setVisible.Add(tilePos);
+            }
+            else if (type == TileType.Ground && !ExistsPlayerWalkablePath(playerCoords, tilePos))
+            {
+                setHidden.Add(tilePos);
+            }
+        }
+
+        var hiddenTile = _tileset.GetByType(TileType.Hidden);
+        foreach(var coord in setHidden)
+        {
+            _tilemap.SetTile(coord, hiddenTile.UnityTile);
+        }
+        var visibleTile = _tileset.GetByType(TileType.Ground);
+        foreach (var coord in setVisible)
+        {
+            _tilemap.SetTile(coord, visibleTile.UnityTile);
+        }
+    }
+
     public Vector3Int CoordsFromWorld(Vector3 worldPos)
     {
         return _tilemap.WorldToCell(worldPos);
@@ -118,7 +154,7 @@ public class Map : MonoBehaviour
     public bool EntityCanMoveTo(Vector3Int coords)
     {
         var tile = _tilemap.GetTile(coords);
-        return (tile != null && _tileset.GetByTile(tile).Walkable);
+        return (tile != null && _tileset.GetByTile(tile).PlayerWalkable);
     }
 
     public  Vector3Int ClampBlockToFitBounds(BoundsInt sourceVector)
@@ -139,13 +175,18 @@ public class Map : MonoBehaviour
         return targetVector;
     }
 
-    public bool ExistsPath(Vector3Int from, Vector3Int to)
+    public bool ExistsPlayerWalkablePath(Vector3Int from, Vector3Int to)
     {
         List<Vector3Int> path = new List<Vector3Int>();
         if (from.Equals(to))
             return true; // Trivial, don't waste time
 
-        PathUtils.FindPath(this, from, to, ref path);
+        PathUtils.FindPath(this, from, to, (coords) => TestPlayerWalkable(coords) || coords.Equals(to), ref path);
         return path.Count >= 2;
+    }
+
+    public bool TestPlayerWalkable(Vector3Int coords)
+    {
+        return GetTileDataAt(coords)?.PlayerWalkable ?? false;
     }
 }
