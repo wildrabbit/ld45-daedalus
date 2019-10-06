@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Map
+    uniqueID: 150358733
+    locked: 0
+  - name: Placement
+    uniqueID: 3946303603
+    locked: 0
+  - name: Entities
+    uniqueID: 1732320187
+    locked: 0
+  - name: UI
+    uniqueID: 2744682223
+    locked: 0
