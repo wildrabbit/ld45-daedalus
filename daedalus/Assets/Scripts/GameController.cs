@@ -8,7 +8,16 @@ public enum GameState
     WaitPlayerInput,
     WaitPlayerAction,
     Placement,
-    Simulating
+    Simulating,
+    // Tutorial??
+}
+
+public enum GameResult
+{
+    None,
+    Running,
+    Won,
+    Lost
 }
 
 public class GameController : MonoBehaviour
@@ -37,6 +46,7 @@ public class GameController : MonoBehaviour
 
     bool _playerActionFinished;
     GameState _gameState;
+    GameResult _gameResult = GameResult.None;
     int _turnCount;
 
     PlaceableBlock _blockPrefab;
@@ -62,12 +72,19 @@ public class GameController : MonoBehaviour
         }
 
         _player.transform.position = _map.WorldFromCoords(_playerStartCoords, centered:true);
+
+        _gameResult = NoPossiblePaths() ? GameResult.Lost : GameResult.Running;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // TODO: Consider game phase (starting, ended)...
+        if(_gameResult != GameResult.Running)
+        {
+            // Do stuff (handle restarts)
+            return;
+        }
 
         switch (_gameState)
         {
@@ -93,7 +110,14 @@ public class GameController : MonoBehaviour
                 if(_playerActionFinished)
                 {
                     _playerActionFinished = false;
-                    _gameState = GameState.Simulating;
+                    if(_map.CoordsFromWorld(_player.transform.position).Equals(_map.CoordsFromWorld(_levelExit.position)))
+                    {
+                        _gameResult = GameResult.Won;
+                    }
+                    else
+                    {
+                        _gameState = GameState.Simulating;
+                    }                    
                 }
                 break;
             }
@@ -136,9 +160,29 @@ public class GameController : MonoBehaviour
                         {
                             Destroy(_tempBlockInstance.gameObject);
                             _tempBlockInstance = null;
-                            _playerActionFinished = true;
-                            _gameState = GameState.Simulating;
                             _player.SetTint(Color.white);
+                            if(NoPossiblePaths())
+                            {
+                                _gameResult = GameResult.Lost;
+                            }
+                            else
+                            {
+                                _gameState = GameState.Simulating;
+                            }                           
+                        }
+                    }
+                    else if(_gameInput.Cancelled)
+                    {
+                        Destroy(_tempBlockInstance.gameObject);
+                        _tempBlockInstance = null;
+                        _player.SetTint(Color.white);
+                        if (NoPossiblePaths())
+                        {
+                            _gameResult = GameResult.Lost;
+                        }
+                        else
+                        {
+                            _gameState = GameState.Simulating;
                         }
                     }
                     if(_tempBlockInstance != null)
@@ -152,11 +196,17 @@ public class GameController : MonoBehaviour
             {
                 // Stuff moves around
                 _turnCount++;
+                _playerActionFinished = false;
                 _gameState = GameState.WaitPlayerInput;
                 break;
             }
         }
         _gameInput.Reset();
+
+        if(_gameResult != GameResult.Running)
+        {
+            Debug.LogFormat("{0}", _gameResult == GameResult.Won ? "won!" : "lost");
+        }
     }
 
     private Scroll GetScrollAt(Vector3Int targetCoords)
@@ -184,9 +234,12 @@ public class GameController : MonoBehaviour
             direction = (pos - playerPos).normalized;
         }
 
+        _playerActionFinished = true;
+
         _player.transform.position = pos;
         var coords = _map.CoordsFromWorld(pos);
         var scroll = GetScrollAt(coords);
+
         if(scroll != null)
         {
             _scrolls.Remove(scroll);
@@ -195,11 +248,7 @@ public class GameController : MonoBehaviour
             CreateBlock(coords);
             _player.SetTint(new Color(1, 1, 1, 0.4f));
             _gameState = GameState.Placement;
-        }
-        else
-        {
-            _playerActionFinished = true;
-        }
+        }        
     }
 
     void CreateBlock(Vector3Int coords)
@@ -212,5 +261,24 @@ public class GameController : MonoBehaviour
 
         bool validPos = _map.CanSetBlock(_tempBlockInstance, coords);
         _tempBlockInstance.SetTint(validPos ? _validBlockTint : _invalidBlockTint);
+    }
+
+    bool NoPossiblePaths()
+    {
+        var playerCoords = _map.CoordsFromWorld(_player.transform.position);
+        bool pathToGoal = _map.ExistsPath(playerCoords, _map.CoordsFromWorld(_levelExit.position));
+        if(pathToGoal)
+        {
+            return false;
+        }
+
+        foreach(var scroll in _scrolls)
+        {
+            if(_map.ExistsPath(playerCoords, _map.CoordsFromWorld(scroll.transform.position)))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

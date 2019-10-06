@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: 8602616638115508982
     second: scroll-item
+  - first:
+      213: -3286624129414447285
+    second: goal
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -156,6 +159,27 @@ TextureImporter:
       bones: []
       spriteID: 9c0a68ae11f0bb84fb9beee9238eb4dc
       internalID: -7939694244080667551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: goal
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36c96f7182c022d4ca0480af3073816c
+      internalID: -3286624129414447285
       vertices: []
       indices: 
       edges: []

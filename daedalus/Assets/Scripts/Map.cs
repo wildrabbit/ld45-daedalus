@@ -3,11 +3,21 @@ using System.Collections;
 
 using UnityEngine.Tilemaps;
 using System;
+using System.Collections.Generic;
 
 public class Map : MonoBehaviour
 {
     [SerializeField] TileSet _tileset;
     [SerializeField] Tilemap _tilemap;
+
+    Vector3Int[] _neighbourOffsets = new Vector3Int[]
+    {
+        new Vector3Int(0,1,0), new Vector3Int(1,0,0), new Vector3Int(0,-1,0), new Vector3Int(-1,0,0)
+    };
+
+    public BoundsInt CellBounds => _tilemap.cellBounds;
+
+    public bool HasTileAt(Vector3Int coords) => _tilemap.HasTile(coords);
 
     Vector3 _halfCellSize;
     
@@ -23,6 +33,14 @@ public class Map : MonoBehaviour
     public void InitFromAsset()//.....)
     {
 
+    }
+
+    public void GetNeighbourDeltas(Vector3Int currentCoords, out Vector3Int[] offsets)
+    {
+        var source = _neighbourOffsets;
+        int deltasLen = source.Length;
+        offsets = new Vector3Int[deltasLen];
+        Array.Copy(source, 0, offsets, 0, deltasLen);
     }
 
     public TileData GetTileDataAt(Vector3Int pos)
@@ -119,5 +137,15 @@ public class Map : MonoBehaviour
             targetVector.y = _tilemap.size.y - h;
         }
         return targetVector;
+    }
+
+    public bool ExistsPath(Vector3Int from, Vector3Int to)
+    {
+        List<Vector3Int> path = new List<Vector3Int>();
+        if (from.Equals(to))
+            return true; // Trivial, don't waste time
+
+        PathUtils.FindPath(this, from, to, ref path);
+        return path.Count >= 2;
     }
 }
