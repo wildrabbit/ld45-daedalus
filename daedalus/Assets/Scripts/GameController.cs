@@ -126,6 +126,14 @@ public class GameController : MonoBehaviour
         if(_gameResult != GameResult.Running)
         {
             // Do stuff (handle restarts)
+            if(_gameResult == GameResult.Won && _gameInput.Confirmed)
+            {
+                PlayState.Instance.NextScene();
+            }
+            else if(_gameResult == GameResult.Lost && _gameInput.Confirmed)
+            {
+                PlayState.Instance.LoadCurrentLevel();
+            }
             return;
         }
 

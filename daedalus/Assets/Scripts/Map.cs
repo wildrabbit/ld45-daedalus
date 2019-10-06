@@ -68,7 +68,20 @@ public class Map : MonoBehaviour
             targetBounds.xMin = coords.x;
             targetBounds.yMin = coords.y;
             targetBounds.size = size;
-            _tilemap.SetTilesBlock(targetBounds, block.Tiles);
+            var auxTiles = new TileBase[block.Tiles.Length];
+            Array.Copy(block.Tiles, auxTiles, block.Tiles.Length);
+            for(int r = 0; r < size.y; ++r)
+            {
+                for(int c = 0; c < size.x; ++c)
+                {
+                    var tile = _tilemap.GetTile(new Vector3Int(c + coords.x, r + coords.y, 0));
+                    if (tile != null && auxTiles[r * size.x + c] == null)
+                    {
+                        auxTiles[r * size.x + c] = tile;
+                    }
+                }
+            }
+            _tilemap.SetTilesBlock(targetBounds, auxTiles);
             return true;
         }
         return false;
