@@ -5,6 +5,6 @@ using UnityEngine.Serialization;
 
 public class Scroll : Entity
 {
-    [FormerlySerializedAs("_viewRoot")] [SerializeField] public Transform ViewRoot;
-    [FormerlySerializedAs("_blockData")][SerializeField] public PlaceableBlock BlockData;
+    [SerializeField] public Transform ViewRoot;
+    [SerializeField] public PlaceableBlock BlockData;
 }

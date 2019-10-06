@@ -20,6 +20,9 @@ TextureImporter:
   - first:
       213: -2682186634733647102
     second: hidden
+  - first:
+      213: -5355302487538107504
+    second: treasure
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -199,7 +202,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -207,6 +210,27 @@ TextureImporter:
       bones: []
       spriteID: 583d28babb8b1f148be5d20f1da13b2b
       internalID: -2682186634733647102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: treasure
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a3fb35a7988e745a682eb9181e680e
+      internalID: -5355302487538107504
       vertices: []
       indices: 
       edges: []

@@ -5,6 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class PlayState : MonoBehaviour
 {
+    [RuntimeInitializeOnLoadMethod]
+    public static void CheckPlayState()
+    {
+        if (Instance == null)
+        {
+            var sceneInstance = FindObjectOfType<PlayState>();
+            if (sceneInstance == null)
+            {
+                var obj = new GameObject("PlayState");
+                var state = obj.AddComponent<PlayState>();
+            }
+        }
+    }
+
     public static PlayState Instance;
 
     private void Awake()
@@ -20,7 +34,7 @@ public class PlayState : MonoBehaviour
     [SerializeField] int _startLevel;
 
     public int CurrentLevelIdx;
-    public string CurrentScene => _levels.Scenes[CurrentLevelIdx];
+    public string CurrentScene => _levels == null ? SceneManager.GetActiveScene().name :_levels.Scenes[CurrentLevelIdx];
 
     public void PlayFirst()
     {

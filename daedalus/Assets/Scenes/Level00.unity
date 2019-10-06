@@ -2324,11 +2324,13 @@ MonoBehaviour:
   _map: {fileID: 101395354}
   _player: {fileID: 2979275962777079400}
   _scrollRoot: {fileID: 954288416}
+  _pickablesRoot: {fileID: 0}
   _playerStart: {fileID: 1857169715}
   _levelExit: {fileID: 769648596}
   _validBlockTint: {r: 0.3244037, g: 0.8490566, b: 0.34030816, a: 0.49803922}
   _invalidBlockTint: {r: 0.5849056, g: 0.024830889, b: 0.024830889, a: 0.43137255}
   _gameInput: {fileID: 1093187599}
+  _levelObjective: 1
 --- !u!4 &1252854229
 Transform:
   m_ObjectHideFlags: 0
@@ -2533,8 +2535,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AssetsPPU: 32
-  m_RefResolutionX: 640
-  m_RefResolutionY: 480
+  m_RefResolutionX: 800
+  m_RefResolutionY: 600
   m_UpscaleRT: 0
   m_PixelSnapping: 1
   m_CropFrameX: 1

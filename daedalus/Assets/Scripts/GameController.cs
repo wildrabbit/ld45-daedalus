@@ -20,11 +20,21 @@ public enum GameResult
     Lost
 }
 
+[Flags]
+public enum GoalType
+{
+    None = 0,
+    Escape = 1,
+    Treasure = 2,
+    Monsters = 4
+}
+
 public class GameController : MonoBehaviour
 {
     [SerializeField] Map _map;
     [SerializeField] Player _player;
     [SerializeField] Transform _scrollRoot;
+    [SerializeField] Transform _pickablesRoot;
     [SerializeField] Transform _playerStart;
     [SerializeField] Transform _levelExit;
 
@@ -32,6 +42,7 @@ public class GameController : MonoBehaviour
     [SerializeField] Color _invalidBlockTint;
 
     [SerializeField] GameInput _gameInput;
+    [SerializeField] GoalType _levelObjective;
 
     readonly Vector3Int[] _offsets = new Vector3Int[] {
         new Vector3Int(0,1,0),
@@ -43,6 +54,7 @@ public class GameController : MonoBehaviour
     Vector3Int _playerStartCoords;
     Vector3Int _playerEndCoords;
     List<Scroll> _scrolls;
+    List<Pickable> _pickables;
 
     bool _playerActionFinished;
     GameState _gameState;
@@ -51,6 +63,9 @@ public class GameController : MonoBehaviour
 
     PlaceableBlock _blockPrefab;
     PlaceableBlock _tempBlockInstance;
+
+    int _totalTreasures;
+    int _acquiredTreasures;
 
     void Start()
     {
@@ -63,12 +78,24 @@ public class GameController : MonoBehaviour
         _playerActionFinished = false;
         _gameState = GameState.WaitPlayerInput;
 
+        _pickables = new List<Pickable>();
+        _totalTreasures = 0;
+        _acquiredTreasures = 0;
+        if(_pickablesRoot != null)
+        {
+            _pickables.AddRange(_pickablesRoot.GetComponentsInChildren<Pickable>());
+            _totalTreasures = _pickables.FindAll(x => x.ItemType == PickableType.Treasure).Count;
+        }
+
         _scrolls = new List<Scroll>(_scrollRoot.GetComponentsInChildren<Scroll>());
         if(_map != null)
         {
             _map.InitTilesFromView();
             _playerStartCoords = _map.CoordsFromWorld(_playerStart.position);
-            _playerEndCoords = _map.CoordsFromWorld(_levelExit.position);
+            if(_levelExit != null)
+            {
+                _playerEndCoords = _map.CoordsFromWorld(_levelExit.position);
+            }            
         }
 
         _player.transform.position = _map.WorldFromCoords(_playerStartCoords, centered:true);
@@ -77,6 +104,7 @@ public class GameController : MonoBehaviour
         RefreshVisibility();
 
         PurgeOverlappingScrolls();
+        Debug.Log($"Level {PlayState.Instance.CurrentScene} starts now");
     }
 
     private void PurgeOverlappingScrolls()
@@ -88,7 +116,7 @@ public class GameController : MonoBehaviour
             var coords = _map.CoordsFromWorld(scroll.transform.position);
             if (foundCoords.Contains(coords))
             {
-                Debug.Log($"Found overlapping scroll {scroll.name} at {foundCoords}");
+                Debug.Log($"Found overlapping scroll {scroll.name} at {coords}");
                 toRemove.Add(scroll);
             }
             else
@@ -161,11 +189,8 @@ public class GameController : MonoBehaviour
                 if(_playerActionFinished)
                 {
                     _playerActionFinished = false;
-                    if(_map.CoordsFromWorld(_player.transform.position).Equals(_map.CoordsFromWorld(_levelExit.position)))
-                    {
-                        _gameResult = GameResult.Won;
-                    }
-                    else
+                    _gameResult = EvaluateVictory();
+                    if(_gameResult == GameResult.Running)
                     {
                         _gameState = GameState.Simulating;
                     }                    
@@ -261,6 +286,23 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private GameResult EvaluateVictory()
+    {
+        bool evaluateEscape = (_levelObjective & GoalType.Escape) != GoalType.None;
+        if (evaluateEscape && !_map.CoordsFromWorld(_player.transform.position).Equals(_playerEndCoords))
+        {
+            return _gameResult;
+        }
+
+        bool evaluateTreasure = (_levelObjective & GoalType.Treasure) != GoalType.None;
+        if(evaluateTreasure && _acquiredTreasures < _totalTreasures)
+        {
+            return _gameResult;
+        }
+
+        return GameResult.Won;
+    }
+
     private List<Scroll> GetScrollsAt(Vector3Int targetCoords)
     {
         List<Scroll> scrolls = new List<Scroll>();
@@ -277,15 +319,7 @@ public class GameController : MonoBehaviour
 
     private Scroll GetScrollAt(Vector3Int targetCoords)
     {
-        foreach(var scroll in _scrolls)
-        {
-            if(_map.CoordsFromWorld(scroll.transform.position).Equals(targetCoords))
-            {
-                return scroll;
-            }
-        }
-
-        return null;
+        return GetEntitiesAt<Scroll>(targetCoords, _scrolls);
     }
 
     IEnumerator MoveTo(Vector3 pos)
@@ -304,9 +338,48 @@ public class GameController : MonoBehaviour
 
         _player.transform.position = pos;
         var coords = _map.CoordsFromWorld(pos);
+
+        CheckScrolls(coords);
+        CheckPickables(coords);
+    }
+
+    void CheckPickables(Vector3Int coords)
+    {
+        Pickable pickable = GetPickableAt(coords);
+        if(pickable != null)
+        {
+            _pickables.Remove(pickable);
+            Destroy(pickable.gameObject);
+            //_hud.AddCollectedPickable(pickable.ItemType);
+            if (pickable.ItemType == PickableType.Treasure)
+            {
+                _acquiredTreasures++;
+            }
+        }
+    }
+
+    private Pickable GetPickableAt(Vector3Int coords)
+    {
+        return GetEntitiesAt<Pickable>(coords, _pickables);
+    }
+
+    private T GetEntitiesAt<T>(Vector3Int coords, List<T> list) where T: Entity
+    {
+        foreach(var entity in list)
+        {
+            if(_map.CoordsFromWorld(entity.transform.position).Equals(coords))
+            {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    void CheckScrolls(Vector3Int coords)
+    {
         var scroll = GetScrollAt(coords);
 
-        if(scroll != null)
+        if (scroll != null)
         {
             _scrolls.Remove(scroll);
             Destroy(scroll.gameObject);
@@ -314,7 +387,7 @@ public class GameController : MonoBehaviour
             CreateBlock(coords);
             _player.SetTint(new Color(1, 1, 1, 0.4f));
             _gameState = GameState.Placement;
-        }        
+        }
     }
 
     void CreateBlock(Vector3Int coords)
@@ -332,19 +405,23 @@ public class GameController : MonoBehaviour
     bool NoPossiblePaths()
     {
         var playerCoords = _map.CoordsFromWorld(_player.transform.position);
-        bool pathToGoal = _map.ExistsPlayerWalkablePath(playerCoords, _map.CoordsFromWorld(_levelExit.position));
-        if(pathToGoal)
+        bool evaluateExit = (_levelObjective & GoalType.Escape) != GoalType.None;
+        bool evaluateTreasure = (_levelObjective & GoalType.Treasure) != GoalType.None;
+        bool scrollsAvailable = ExistsPlayerWalkablePahToEntity(playerCoords, _scrolls);
+
+        bool goalReachable = !evaluateExit || _map.ExistsPlayerWalkablePath(playerCoords, _playerEndCoords);
+        bool treasuresReachable = ExistsPlayerWalkablePahToEntity(playerCoords, _pickables);
+
+        if(scrollsAvailable)
         {
             return false;
         }
 
-        foreach(var scroll in _scrolls)
-        {
-            if(_map.ExistsPlayerWalkablePath(playerCoords, _map.CoordsFromWorld(scroll.transform.position)))
-            {
-                return false;
-            }
-        }
-        return true;
+        return !goalReachable && !treasuresReachable;
+    }
+
+    bool ExistsPlayerWalkablePahToEntity<T>(Vector3Int playerCoords, List<T> entities) where T:Entity
+    {
+        return entities.Exists(entity => _map.ExistsPlayerWalkablePath(playerCoords, _map.CoordsFromWorld(entity.transform.position)));
     }
 }
