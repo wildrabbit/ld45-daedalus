@@ -53,6 +53,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField] float _moveSpeed = 3f;
 
+    [SerializeField] TreasurePanel _treasurePanel;
+
     readonly Vector3Int[] _offsets = new Vector3Int[] {
         new Vector3Int(0,1,0),
         new Vector3Int(0,-1,0),
@@ -419,6 +421,10 @@ public class GameController : MonoBehaviour
             if (pickable.ItemType == PickableType.Treasure)
             {
                 _acquiredTreasures++;
+                if(_treasurePanel != null)
+                {
+                    _treasurePanel.AddPickablePanel(pickable.UIIcon);
+                }
             }
         }
     }

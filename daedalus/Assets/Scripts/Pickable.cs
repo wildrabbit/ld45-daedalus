@@ -11,5 +11,6 @@ public enum PickableType
 
 public class Pickable : Entity
 {
-    [FormerlySerializedAs("_itemType")] public PickableType ItemType;
+    public PickableType ItemType;
+    public Sprite UIIcon;
 }

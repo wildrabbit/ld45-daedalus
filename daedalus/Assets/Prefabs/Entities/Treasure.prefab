@@ -127,4 +127,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hiddenSprite: {fileID: 0}
-  _itemType: 0
+  ItemType: 0
+  UIIcon: {fileID: -5355302487538107504, guid: ad640c5341a516b4883ee20caea2a6ae, type: 3}
