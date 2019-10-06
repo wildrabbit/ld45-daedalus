@@ -409,7 +409,7 @@ public class GameController : MonoBehaviour
         bool evaluateTreasure = (_levelObjective & GoalType.Treasure) != GoalType.None;
         bool scrollsAvailable = ExistsPlayerWalkablePahToEntity(playerCoords, _scrolls);
 
-        bool goalReachable = !evaluateExit || _map.ExistsPlayerWalkablePath(playerCoords, _playerEndCoords);
+        bool goalReachable = _map.ExistsPlayerWalkablePath(playerCoords, _playerEndCoords);
         bool treasuresReachable = ExistsPlayerWalkablePahToEntity(playerCoords, _pickables);
 
         if(scrollsAvailable)
@@ -417,7 +417,7 @@ public class GameController : MonoBehaviour
             return false;
         }
 
-        return !goalReachable && !treasuresReachable;
+        return (evaluateExit && !goalReachable) ||  (evaluateTreasure && !treasuresReachable);
     }
 
     bool ExistsPlayerWalkablePahToEntity<T>(Vector3Int playerCoords, List<T> entities) where T:Entity
