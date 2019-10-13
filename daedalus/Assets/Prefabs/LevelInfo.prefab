@@ -316,11 +316,11 @@ MonoBehaviour:
     </color>
 
 
-    C Key, A pad button:<br> <color=white>Confirm placement, Take
-    scroll, accept </color>
+    C Key, A pad button:<br> <color=white>Accept | Confirm placement</color>
 
 
-    X Key, B pad button:<br> <color=white>Cancel placement</color>'
+    X
+    Key, B pad button:<br> <color=white>Cancel placement (it''ll destroy the block!)</color>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 54d6a2a4c967f8b41b8102e42c0f7589, type: 2}
   m_sharedMaterial: {fileID: -8783944235083442534, guid: 54d6a2a4c967f8b41b8102e42c0f7589,
