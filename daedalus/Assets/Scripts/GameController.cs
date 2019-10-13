@@ -75,6 +75,8 @@ public class GameController : MonoBehaviour
     PlaceableBlock _blockPrefab;
     PlaceableBlock _tempBlockInstance;
 
+    Scroll _selectedScroll;
+
     int _totalTreasures;
     int _acquiredTreasures;
 
@@ -228,6 +230,10 @@ public class GameController : MonoBehaviour
                         StartCoroutine(MoveTo(targetWorld));
                     }
                 }
+                else if (_gameInput.Confirmed)
+                {
+                    CheckScrolls(playerCoords);
+                }
                 break;
             }
             case GameState.WaitPlayerAction:
@@ -280,6 +286,13 @@ public class GameController : MonoBehaviour
                         validPos = _map.TrySetBlock(_tempBlockInstance, blockCoords);
                         if(validPos)
                         {
+                            if(_selectedScroll != null)
+                            {
+                                _scrolls.Remove(_selectedScroll);
+                                Destroy(_selectedScroll.gameObject);
+                                _selectedScroll = null;
+                            }
+
                             Destroy(_tempBlockInstance.gameObject);
                             _tempBlockInstance = null;
                             RefreshVisibility(ignoreHiddenCheck:true);
@@ -296,6 +309,10 @@ public class GameController : MonoBehaviour
                     }
                     else if(_gameInput.Cancelled)
                     {
+                        if(_selectedScroll != null)
+                        {
+                            _selectedScroll.gameObject.SetActive(true);
+                        }
                         Destroy(_tempBlockInstance.gameObject);
                         _tempBlockInstance = null;
                         _player.SetTint(Color.white);
@@ -457,10 +474,12 @@ public class GameController : MonoBehaviour
     {
         var scroll = GetScrollAt(coords);
 
-        if (scroll != null)
+        if (scroll != null && scroll.gameObject.activeInHierarchy)
         {
-            _scrolls.Remove(scroll);
-            Destroy(scroll.gameObject);
+            //_scrolls.Remove(scroll);
+            //Destroy(scroll.gameObject);
+            _selectedScroll = scroll;
+            scroll.gameObject.SetActive(false);
             _blockPrefab = scroll.BlockData;
             CreateBlock(coords);
             _player.SetTint(new Color(1, 1, 1, 0.4f));
