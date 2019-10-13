@@ -547,7 +547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 288c3be5ff0bcec41bf482a92cd2cbfa,
     type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -695,7 +695,8 @@ MonoBehaviour:
   Rotation: -1
   Confirmed: 0
   Cancelled: 0
-  _playerInput: {fileID: 0}
+  AnyPressed: 0
+  _playerInput: {fileID: 1093187597}
 --- !u!1001 &1099273413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -832,7 +833,7 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 387950845}
   _levelEndDelay: 1
-  _moveSpeed: 3
+  _moveSpeed: 5
   _treasurePanel: {fileID: 0}
 --- !u!4 &1252854229
 Transform:
@@ -964,11 +965,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5777994720821042846, guid: cb577cd10d59b004aacc49ef81cfb522,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5777994720154626819, guid: cb577cd10d59b004aacc49ef81cfb522,
         type: 3}
@@ -1103,6 +1099,11 @@ PrefabInstance:
     - target: {fileID: 1773010779, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_text
       value: (Press confirm to continue)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777994720821042846, guid: cb577cd10d59b004aacc49ef81cfb522,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_Material

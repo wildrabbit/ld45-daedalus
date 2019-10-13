@@ -314,7 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 288c3be5ff0bcec41bf482a92cd2cbfa,
     type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -462,7 +462,8 @@ MonoBehaviour:
   Rotation: -1
   Confirmed: 0
   Cancelled: 0
-  _playerInput: {fileID: 0}
+  AnyPressed: 0
+  _playerInput: {fileID: 1093187597}
 --- !u!1 &1252854227
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,7 +507,7 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 2096174754}
   _levelEndDelay: 1
-  _moveSpeed: 3
+  _moveSpeed: 5
   _treasurePanel: {fileID: 7967221603474179363}
 --- !u!4 &1252854229
 Transform:

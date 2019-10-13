@@ -81,6 +81,8 @@ public class GameController : MonoBehaviour
     bool _infoReady = false;
     bool _endReady = false;
 
+    bool _placementDelay = false;
+
     void Start()
     {
         if(_infoCanvas != null)
@@ -123,9 +125,8 @@ public class GameController : MonoBehaviour
         RefreshVisibility();
 
         PurgeOverlappingScrolls();
-        Debug.Log($"Level {PlayState.Instance.CurrentScene} starts now");
 
-        if(_gameState == GameState.WaitInfo)
+        if (_gameState == GameState.WaitInfo)
         {
             _infoReady = false;
             StartCoroutine(ShowInfo());
@@ -150,7 +151,6 @@ public class GameController : MonoBehaviour
             var coords = _map.CoordsFromWorld(scroll.transform.position);
             if (foundCoords.Contains(coords))
             {
-                Debug.Log($"Found overlapping scroll {scroll.name} at {coords}");
                 toRemove.Add(scroll);
             }
             else
@@ -165,10 +165,10 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void RefreshVisibility()
+    void RefreshVisibility(bool ignoreHiddenCheck = false)
     {
         Vector3Int playerCoords = _map.CoordsFromWorld(_player.transform.position);
-        _map.RefreshHiddenTiles(playerCoords);
+        _map.RefreshHiddenTiles(playerCoords, ignoreHiddenCheck);
 
         foreach (var scroll in _scrolls)
         {
@@ -214,10 +214,11 @@ public class GameController : MonoBehaviour
             }
             case GameState.WaitPlayerInput:
             {
-                if(_gameInput.Direction != MoveDirection.None)
+                Vector3Int playerCoords = _map.CoordsFromWorld(_player.transform.position);
+
+                if (_gameInput.Direction != MoveDirection.None)
                 {
                     Vector3Int coordOffset = _offsets[(int)_gameInput.Direction];
-                    Vector3Int playerCoords = _map.CoordsFromWorld(_player.transform.position);
                     Vector3Int targetCoords = playerCoords + coordOffset;
 
                     if(_map.EntityCanMoveTo(targetCoords))
@@ -252,7 +253,7 @@ public class GameController : MonoBehaviour
                 {
                     Vector3Int blockCoords = _map.CoordsFromWorld(_tempBlockInstance.transform.position);
                     bool validPos = _map.CanSetBlock(_tempBlockInstance, blockCoords);
-                    if (_gameInput.Direction != MoveDirection.None)
+                    if (_gameInput.Direction != MoveDirection.None && !_placementDelay)
                     {
                         Vector3Int coordOffset = _offsets[(int)_gameInput.Direction];
                         Vector3Int targetCoords = blockCoords + coordOffset;
@@ -267,7 +268,7 @@ public class GameController : MonoBehaviour
                         targetCoords = _map.ClampBlockToFitBounds(bounds);
 
                         validPos = _map.CanSetBlock(_tempBlockInstance, targetCoords);
-                        _tempBlockInstance.transform.position = _map.WorldFromCoords(targetCoords, centered: false);
+                        StartCoroutine(MoveBlock(targetCoords));                        
                     }
                     else if(_gameInput.Rotation != RotateDirection.None)
                     {
@@ -281,7 +282,7 @@ public class GameController : MonoBehaviour
                         {
                             Destroy(_tempBlockInstance.gameObject);
                             _tempBlockInstance = null;
-                            RefreshVisibility();
+                            RefreshVisibility(ignoreHiddenCheck:true);
                             _player.SetTint(Color.white);
                             if(NoPossiblePaths())
                             {
@@ -331,8 +332,15 @@ public class GameController : MonoBehaviour
             _endReady = false;
 
             StartCoroutine(OnLevelEnd());
-            Debug.LogFormat("{0}", _gameResult == GameResult.Won ? "won!" : "lost");
         }
+    }
+
+    IEnumerator MoveBlock(Vector3Int targetCoords)
+    {
+        _placementDelay = true;
+        _tempBlockInstance.transform.position = _map.WorldFromCoords(targetCoords, centered: false);
+        yield return new WaitForSeconds(0.3f);
+        _placementDelay = false;
     }
 
     IEnumerator OnLevelEnd()
@@ -393,7 +401,7 @@ public class GameController : MonoBehaviour
     {
         Vector3 playerPos = _player.transform.position;
         Vector3 direction = (pos - _player.transform.position).normalized;
-        while(Vector3.Distance(playerPos, pos) > 0.01f)
+        while(Vector3.Distance(playerPos, pos) > 0.02f)
         {
             playerPos += _moveSpeed * Time.deltaTime * direction; // TODO: Change to easing
             _player.transform.position = playerPos;
@@ -417,7 +425,6 @@ public class GameController : MonoBehaviour
         {
             _pickables.Remove(pickable);
             Destroy(pickable.gameObject);
-            //_hud.AddCollectedPickable(pickable.ItemType);
             if (pickable.ItemType == PickableType.Treasure)
             {
                 _acquiredTreasures++;

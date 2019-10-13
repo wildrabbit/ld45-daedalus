@@ -312,16 +312,15 @@ MonoBehaviour:
     </color>
 
 
-    Q/E, Shoulder buttons:<br> <color=white>Move Daedalus and Blocks
+    Q/E, Shoulder buttons:<br> <color=white>Rotate Blocks left/right
     </color>
 
 
-    C Key, A pad button:<br> <color=white>Confirm placement, accept
-    </color>
+    C Key, A pad button:<br> <color=white>Confirm placement, Take
+    scroll, accept </color>
 
 
-    X Key, B pad button:<br> <color=white>Cancel placement (will destroy
-    the block)</color>'
+    X Key, B pad button:<br> <color=white>Cancel placement</color>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 54d6a2a4c967f8b41b8102e42c0f7589, type: 2}
   m_sharedMaterial: {fileID: -8783944235083442534, guid: 54d6a2a4c967f8b41b8102e42c0f7589,
@@ -350,8 +349,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 9.57
+  m_fontSizeBase: 9.57
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

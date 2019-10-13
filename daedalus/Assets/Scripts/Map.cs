@@ -113,7 +113,7 @@ public class Map : MonoBehaviour
         return true;
     }
 
-    internal void RefreshHiddenTiles(Vector3Int playerCoords)
+    internal void RefreshHiddenTiles(Vector3Int playerCoords, bool ignoreHiddenCheck = false)
     {
         List<Vector3Int> setHidden = new List<Vector3Int>();
         List<Vector3Int> setVisible = new List<Vector3Int>();
@@ -131,7 +131,7 @@ public class Map : MonoBehaviour
             {
                 setVisible.Add(tilePos);
             }
-            else if (type == TileType.Ground && !ExistsPlayerWalkablePath(playerCoords, tilePos))
+            else if (!ignoreHiddenCheck && type == TileType.Ground && !ExistsPlayerWalkablePath(playerCoords, tilePos))
             {
                 setHidden.Add(tilePos);
             }

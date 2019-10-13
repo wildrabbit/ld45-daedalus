@@ -479,7 +479,8 @@ MonoBehaviour:
   Rotation: -1
   Confirmed: 0
   Cancelled: 0
-  _playerInput: {fileID: 0}
+  AnyPressed: 0
+  _playerInput: {fileID: 1093187597}
 --- !u!1 &1252854227
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,6 +520,12 @@ MonoBehaviour:
   _invalidBlockTint: {r: 0.5849056, g: 0.024830889, b: 0.024830889, a: 0.43137255}
   _gameInput: {fileID: 1093187599}
   _levelObjective: 0
+  _infoCanvas: {fileID: 0}
+  _infoDelay: 3
+  _levelEndCanvas: {fileID: 0}
+  _levelEndDelay: 1
+  _moveSpeed: 3
+  _treasurePanel: {fileID: 0}
 --- !u!4 &1252854229
 Transform:
   m_ObjectHideFlags: 0

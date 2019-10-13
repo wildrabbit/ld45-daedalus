@@ -79,7 +79,7 @@ public static class PathUtils
                     }
                     if (count != coordsQueue.Count)
                     {
-                        Debug.LogError("Whaaaat");
+                        Debug.LogError("Pathfinding issue. count doesn't match queue length (impossibru!)");
                     }
                 }
             }

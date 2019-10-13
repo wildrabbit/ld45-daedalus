@@ -155,7 +155,8 @@ MonoBehaviour:
   Rotation: -1
   Confirmed: 0
   Cancelled: 0
-  _playerInput: {fileID: 0}
+  AnyPressed: 0
+  _playerInput: {fileID: 990745}
 --- !u!114 &990745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 288c3be5ff0bcec41bf482a92cd2cbfa,
     type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -419,27 +420,27 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5777994720154626818, guid: 36a5e88322c67954c839fa812e31943a,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777994720154626818, guid: 36a5e88322c67954c839fa812e31943a,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2033672457455215417, guid: 36a5e88322c67954c839fa812e31943a,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2033672457455215417, guid: 36a5e88322c67954c839fa812e31943a,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3766322064895396778, guid: 36a5e88322c67954c839fa812e31943a,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5777994720154626818, guid: 36a5e88322c67954c839fa812e31943a,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5777994720154626818, guid: 36a5e88322c67954c839fa812e31943a,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033672457455215417, guid: 36a5e88322c67954c839fa812e31943a,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033672457455215417, guid: 36a5e88322c67954c839fa812e31943a,
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0

@@ -11,7 +11,7 @@
                     "id": "fd89c4fb-4755-4738-853f-7ec719f4b1b2",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "Tap"
+                    "interactions": ""
                 },
                 {
                     "name": "Rotate",
@@ -19,7 +19,7 @@
                     "id": "dd29829a-62f1-4418-97d4-6d4bb8732ad5",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Tap"
+                    "interactions": ""
                 },
                 {
                     "name": "Confirm",
@@ -27,7 +27,7 @@
                     "id": "3a8f6222-4bde-49f5-a7a7-7627639ffcde",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Tap"
+                    "interactions": ""
                 },
                 {
                     "name": "Cancel",
@@ -35,7 +35,7 @@
                     "id": "81ca217a-485f-4df7-b053-e42e999100dd",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Tap"
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -241,7 +241,7 @@
                     "name": "",
                     "id": "9182287c-b78b-444d-ab3f-51248c3cf73b",
                     "path": "<Gamepad>/buttonSouth",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Confirm",
