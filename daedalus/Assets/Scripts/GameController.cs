@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum GameState
 {
@@ -51,7 +52,11 @@ public class GameController : MonoBehaviour
     [SerializeField] Canvas _levelEndCanvas;
     [SerializeField] float _levelEndDelay = 1f;
 
-    [SerializeField] float _moveSpeed = 3f;
+    [SerializeField] float _moveDuration = 0.5f;
+    [SerializeField] float _blockMoveDuration = 0.3f;
+
+    [SerializeField] bool _destructiveCancel = true;
+    [SerializeField] bool _hidePanel = false;
 
     [SerializeField] TreasurePanel _treasurePanel;
 
@@ -230,7 +235,7 @@ public class GameController : MonoBehaviour
                         StartCoroutine(MoveTo(targetWorld));
                     }
                 }
-                else if (_gameInput.Confirmed)
+                else if (!_destructiveCancel && _gameInput.Confirmed)
                 {
                     CheckScrolls(playerCoords);
                 }
@@ -286,7 +291,7 @@ public class GameController : MonoBehaviour
                         validPos = _map.TrySetBlock(_tempBlockInstance, blockCoords);
                         if(validPos)
                         {
-                            if(_selectedScroll != null)
+                            if(!_destructiveCancel && _selectedScroll != null)
                             {
                                 _scrolls.Remove(_selectedScroll);
                                 Destroy(_selectedScroll.gameObject);
@@ -309,7 +314,7 @@ public class GameController : MonoBehaviour
                     }
                     else if(_gameInput.Cancelled)
                     {
-                        if(_selectedScroll != null)
+                        if (!_destructiveCancel && _selectedScroll != null)
                         {
                             _selectedScroll.gameObject.SetActive(true);
                         }
@@ -356,7 +361,7 @@ public class GameController : MonoBehaviour
     {
         _placementDelay = true;
         _tempBlockInstance.transform.position = _map.WorldFromCoords(targetCoords, centered: false);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(_blockMoveDuration);
         _placementDelay = false;
     }
 
@@ -367,7 +372,7 @@ public class GameController : MonoBehaviour
             _levelEndCanvas.gameObject.SetActive(true);
             EndScreen endScreen = _levelEndCanvas.GetComponent<EndScreen>();
             endScreen.SetConfirm(false);
-            endScreen.Setup(_gameResult);
+            endScreen.Setup(_gameResult, _hidePanel);
         }
         // TODO: Show victory / defeat / last level logic
         yield return new WaitForSeconds(_levelEndDelay);
@@ -417,18 +422,16 @@ public class GameController : MonoBehaviour
     IEnumerator MoveTo(Vector3 pos)
     {
         Vector3 playerPos = _player.transform.position;
-        Vector3 direction = (pos - _player.transform.position).normalized;
-        while(Vector3.Distance(playerPos, pos) > 0.02f)
+        float accum = 0;
+        while(accum <= _moveDuration)
         {
-            playerPos += _moveSpeed * Time.deltaTime * direction; // TODO: Change to easing
-            _player.transform.position = playerPos;
+            accum += Time.deltaTime;
+            _player.transform.position = Vector3.Lerp(playerPos, pos, accum / _moveDuration);
             yield return null;
-            direction = (pos - playerPos).normalized;
         }
 
         _playerActionFinished = true;
 
-        _player.transform.position = pos;
         var coords = _map.CoordsFromWorld(pos);
 
         CheckScrolls(coords);
@@ -476,10 +479,16 @@ public class GameController : MonoBehaviour
 
         if (scroll != null && scroll.gameObject.activeInHierarchy)
         {
-            //_scrolls.Remove(scroll);
-            //Destroy(scroll.gameObject);
-            _selectedScroll = scroll;
-            scroll.gameObject.SetActive(false);
+            if(_destructiveCancel)
+            {
+                _scrolls.Remove(scroll);
+                Destroy(scroll.gameObject);
+            }
+            else
+            {
+                _selectedScroll = scroll;
+                scroll.gameObject.SetActive(false);
+            }
             _blockPrefab = scroll.BlockData;
             CreateBlock(coords);
             _player.SetTint(new Color(1, 1, 1, 0.4f));

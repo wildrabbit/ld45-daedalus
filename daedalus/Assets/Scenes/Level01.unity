@@ -833,7 +833,9 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 387950845}
   _levelEndDelay: 1
-  _moveSpeed: 5
+  _moveDuration: 0.2
+  _blockMoveDuration: 0.2
+  _destructiveCancel: 1
   _treasurePanel: {fileID: 0}
 --- !u!4 &1252854229
 Transform:
@@ -1052,10 +1054,6 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1212034144, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1212034147, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_textInfo.characterCount
       value: 0
@@ -1070,10 +1068,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1212034147, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1773010777, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1773010779, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
@@ -1112,6 +1106,14 @@ PrefabInstance:
     - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_sharedMaterial
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1212034144, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773010777, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}

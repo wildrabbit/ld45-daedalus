@@ -2517,7 +2517,10 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 1584085276}
   _levelEndDelay: 1
-  _moveSpeed: 5
+  _moveDuration: 0.2
+  _blockMoveDuration: 0.2
+  _destructiveCancel: 1
+  _hidePanel: 0
   _treasurePanel: {fileID: 0}
 --- !u!4 &1252854229
 Transform:
@@ -3244,16 +3247,28 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1778142385326211483, guid: cb577cd10d59b004aacc49ef81cfb522,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5777994720821042846, guid: cb577cd10d59b004aacc49ef81cfb522,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2467113589376590612}
+    - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 957802694}
+    - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 957802694}
+    - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1778142385326211483, guid: cb577cd10d59b004aacc49ef81cfb522,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1212034145, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 400
@@ -3293,18 +3308,6 @@ PrefabInstance:
     - target: {fileID: 1773010778, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_SizeDelta.y
       value: 227.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 957802694}
-    - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 957802694}
-    - target: {fileID: 906968129, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}

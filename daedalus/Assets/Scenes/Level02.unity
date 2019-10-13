@@ -507,7 +507,9 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 2096174754}
   _levelEndDelay: 1
-  _moveSpeed: 5
+  _moveDuration: 0.2
+  _blockMoveDuration: 0.2
+  _destructiveCancel: 1
   _treasurePanel: {fileID: 7967221603474179363}
 --- !u!4 &1252854229
 Transform:
@@ -966,10 +968,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1212034144, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1212034147, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_textInfo.characterCount
       value: 0
@@ -984,10 +982,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1212034147, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1773010777, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1773010779, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
@@ -1017,6 +1011,14 @@ PrefabInstance:
     - target: {fileID: 1778142385326211483, guid: cb577cd10d59b004aacc49ef81cfb522,
         type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1212034144, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773010777, guid: cb577cd10d59b004aacc49ef81cfb522, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

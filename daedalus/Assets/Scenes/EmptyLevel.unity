@@ -524,7 +524,9 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 0}
   _levelEndDelay: 1
-  _moveSpeed: 3
+  _moveDuration: 0.2
+  _blockMoveDuration: 0.2
+  _destructiveCancel: 1
   _treasurePanel: {fileID: 0}
 --- !u!4 &1252854229
 Transform:

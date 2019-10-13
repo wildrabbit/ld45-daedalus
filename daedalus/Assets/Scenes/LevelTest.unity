@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.002124689, g: 0, b: 0.0056053917, a: 1}
+  m_AmbientSkyColor: {r: 0.8584906, g: 0.45759168, b: 0.8584906, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -1948,7 +1948,10 @@ MonoBehaviour:
   _infoDelay: 3
   _levelEndCanvas: {fileID: 1190890989}
   _levelEndDelay: 1
-  _moveSpeed: 5
+  _moveDuration: 0.2
+  _blockMoveDuration: 0.2
+  _destructiveCancel: 1
+  _hidePanel: 0
   _treasurePanel: {fileID: 0}
 --- !u!4 &1252854229
 Transform:
